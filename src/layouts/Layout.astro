@@ -1,112 +1,83 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-interface Props { title?: string; description?: string; }
-const { title = 'Kaushal Kumar | Mathematics, AI and Systems', description = 'Kaushal Kumar is a Mathematics & Computing student building practical AI, computer vision, edge systems and robotics.' } = Astro.props;
-const currentPath = Astro.url.pathname;
-const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://ratwet.github.io');
-const links = [
-  { href: '/', label: 'Home' },
-  { href: '/about/', label: 'About' },
-  { href: '/experience/', label: 'Experience' },
-  { href: '/projects/', label: 'Projects' },
-  { href: '/media/', label: 'Media' },
-  { href: '/contact/', label: 'Contact' },
-];
-const personJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Kaushal Kumar',
-  url: 'https://ratwet.github.io/',
-  sameAs: ['https://github.com/ratwet', 'https://linkedin.com/in/kaushal-kumar-072739206'],
-  jobTitle: 'Mathematics & Computing Student',
-  affiliation: { '@type': 'CollegeOrUniversity', name: 'Central University of Jammu' },
-  knowsAbout: ['Artificial Intelligence', 'Machine Learning', 'Computer Vision', 'Robotics', 'Embedded Systems', 'Mathematics'],
-};
+
+interface Props { title?: string; description?: string; ogImage?: string; }
+const { title = 'Kaushal Kumar | Applied AI & Systems', description = 'Kaushal Kumar is a Mathematics & Computing student building applied AI systems, computer vision, embedded systems, and robotics.', ogImage = '/og.svg' } = Astro.props;
+const site = Astro.site ?? new URL('https://ratwet.github.io');
+const canonical = new URL(Astro.url.pathname, site);
+const links = [{ href: '/about/', label: 'About' }, { href: '/projects/', label: 'Work' }, { href: '/experience/', label: 'Experience' }, { href: '/contact/', label: 'Contact' }];
+const personJsonLd = { '@context': 'https://schema.org', '@type': 'Person', name: 'Kaushal Kumar', url: site.href, email: 'mailto:kaushalkumar@duck.com', jobTitle: 'Mathematics & Computing Student', sameAs: ['https://github.com/ratwet', 'https://linkedin.com/in/kaushal-kumar-072739206'], affiliation: { '@type': 'CollegeOrUniversity', name: 'Central University of Jammu' }, knowsAbout: ['Artificial Intelligence', 'Machine Learning', 'Computer Vision', 'Embedded Systems', 'Robotics', 'Mathematics'] };
 ---
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#07080c" />
+  <meta name="theme-color" content="#f1f2f4" />
   <meta name="description" content={description} />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={canonical} />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
   <meta property="og:url" content={canonical} />
-  <meta property="og:image" content="https://ratwet.github.io/og.svg" />
+  <meta property="og:image" content={new URL(ogImage, site)} />
+  <meta property="og:image:alt" content="Kaushal Kumar portfolio" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content="https://ratwet.github.io/og.svg" />
-  <link rel="canonical" href={canonical} />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="twitter:image" content={new URL(ogImage, site)} />
   <title>{title}</title>
-  <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)}></script>
+  {Astro.url.pathname === '/' && <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)} />}
   <ClientRouter fallback="swap" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
-  <div class="ambient" aria-hidden="true"></div>
-  <div class="grid" aria-hidden="true"></div>
   <header class="site-header">
-    <a class="brand" href="/" aria-label="Kaushal Kumar home"><span class="brand-mark" aria-hidden="true">K</span><span>Kaushal Kumar</span></a>
+    <a class="wordmark" href="/" aria-label="Kaushal Kumar home"><img src="/reticle-mark.svg" alt="" width="22" height="22" /><span>kaushal kumar</span></a>
     <nav class="nav" aria-label="Primary navigation">
-      {links.map((link) => <a class:active={currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href))} href={link.href}>{link.label}</a>)}
+      {links.map((link) => <a class:active={Astro.url.pathname === link.href || (link.href !== '/' && Astro.url.pathname.startsWith(link.href))} href={link.href}>{link.label}</a>)}
     </nav>
-    <div class="header-actions">
-      <a class="availability" href="/contact/"><span></span>Available for internships</a>
-      <button class="command-trigger" id="command-trigger" type="button" aria-label="Open command palette">⌘ K</button>
-      <button class="menu-trigger" id="menu-trigger" type="button" aria-label="Toggle navigation" aria-expanded="false">Menu</button>
+    <div class="header-tools">
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme"><span id="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Theme</span></button>
+      <button class="command-trigger" id="command-trigger" type="button" aria-label="Open command palette">⌘K</button>
+      <button class="menu-trigger" id="menu-trigger" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
     </div>
   </header>
   <main id="main-content" class="page-shell"><slot /></main>
-  <footer class="site-footer">
-    <span>© {new Date().getFullYear()} Kaushal Kumar</span>
-    <span>Built with Astro</span>
-    <span class="footer-links"><a href="https://github.com/ratwet" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://linkedin.com/in/kaushal-kumar-072739206" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></span>
-  </footer>
-  <dialog id="command-palette" class="command-palette" aria-label="Command palette">
-    <div class="palette-card">
-      <div class="palette-top"><span>Navigate</span><kbd>ESC</kbd></div>
-      <input id="command-input" type="search" placeholder="Search pages" autocomplete="off" />
-      <div class="command-results">{links.map((link, i) => <a class="command-item" data-label={link.label.toLowerCase()} href={link.href}><span>0{i + 1}</span><b>{link.label}</b><small>↗</small></a>)}</div>
-    </div>
+  <footer class="site-footer"><span>© {new Date().getFullYear()} Kaushal Kumar · Built with Astro</span><span class="footer-links"><a href="https://github.com/ratwet" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://linkedin.com/in/kaushal-kumar-072739206" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></span></footer>
+  <dialog id="command-palette" class="command-palette" aria-labelledby="palette-title">
+    <div class="palette-card"><div class="palette-top"><span id="palette-title">Jump to</span><kbd>ESC</kbd></div><input id="command-input" type="search" placeholder="Search pages" autocomplete="off" aria-label="Search pages" /><div class="command-results">{links.map((link, i) => <a class="command-item" data-label={link.label.toLowerCase()} href={link.href}><span>0{i + 1}</span><strong>{link.label}</strong><b>↗</b></a>)}</div></div>
   </dialog>
   <script>
-    const command = document.querySelector('#command-palette');
-    const trigger = document.querySelector('#command-trigger');
+    const root = document.documentElement;
+    const themeButton = document.querySelector('#theme-toggle');
+    const themeIcon = document.querySelector('#theme-icon');
+    const savedTheme = localStorage.getItem('kaushal-theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') root.dataset.theme = savedTheme;
+    const syncTheme = () => { const dark = root.dataset.theme === 'dark' || (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches); if (themeIcon) themeIcon.textContent = dark ? '☼' : '◐'; themeButton?.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme'); };
+    syncTheme();
+    themeButton?.addEventListener('click', () => { const dark = root.dataset.theme === 'dark' || (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches); root.dataset.theme = dark ? 'light' : 'dark'; localStorage.setItem('kaushal-theme', root.dataset.theme); syncTheme(); });
+    const dialog = document.querySelector('#command-palette');
     const input = document.querySelector('#command-input');
     const items = [...document.querySelectorAll('.command-item')];
-    const menu = document.querySelector('#menu-trigger');
-    const nav = document.querySelector('.nav');
-    const openPalette = () => { if (command instanceof HTMLDialogElement) { command.showModal(); input?.focus(); } };
-    trigger?.addEventListener('click', openPalette);
-    addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); } });
-    input?.addEventListener('input', () => { const q = input.value.trim().toLowerCase(); items.forEach((item) => { if (item instanceof HTMLElement) item.hidden = !item.dataset.label?.includes(q); }); });
-    command?.addEventListener('click', (e) => { if (e.target === command && command instanceof HTMLDialogElement) command.close(); });
+    const openPalette = () => { if (dialog instanceof HTMLDialogElement) { dialog.showModal(); input?.focus(); } };
+    document.querySelector('#command-trigger')?.addEventListener('click', openPalette);
+    addEventListener('keydown', (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openPalette(); } if (event.key === 'Escape' && dialog instanceof HTMLDialogElement && dialog.open) dialog.close(); });
+    input?.addEventListener('input', () => { const q = input.value.trim().toLowerCase(); items.forEach((item) => { if (item instanceof HTMLElement) item.hidden = !String(item.dataset.label).includes(q); }); });
+    dialog?.addEventListener('click', (event) => { if (event.target === dialog && dialog instanceof HTMLDialogElement) dialog.close(); });
+    const nav = document.querySelector('.nav'); const menu = document.querySelector('#menu-trigger');
     menu?.addEventListener('click', () => { const open = nav?.classList.toggle('open') ?? false; menu.setAttribute('aria-expanded', String(open)); });
-    addEventListener('click', (e) => { if (!(e.target instanceof Element)) return; if (!e.target.closest('.site-header')) { nav?.classList.remove('open'); menu?.setAttribute('aria-expanded', 'false'); } });
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-    const canvas = document.createElement('canvas');
-    canvas.className = 'ambient-canvas';
-    canvas.setAttribute('aria-hidden', 'true');
-    if (!reduce.matches && window.innerWidth > 760) {
-      document.body.prepend(canvas);
-      const ctx = canvas.getContext('2d');
-      const resize = () => { const dpr = Math.min(devicePixelRatio || 1, 1.5); canvas.width = innerWidth * dpr; canvas.height = innerHeight * dpr; ctx?.setTransform(dpr, 0, 0, dpr, 0, 0); };
-      const start = performance.now();
-      const frame = (now) => { if (!ctx) return; const t = (now - start) / 1000; ctx.clearRect(0, 0, innerWidth, innerHeight); const g = ctx.createRadialGradient(innerWidth * .72, innerHeight * .16, 0, innerWidth * .72, innerHeight * .16, innerWidth * .7); g.addColorStop(0, 'rgba(76,201,240,.08)'); g.addColorStop(1, 'rgba(7,8,12,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, innerWidth, innerHeight); const y = innerHeight * (.28 + Math.sin(t * .18) * .025); ctx.strokeStyle = 'rgba(76,201,240,.07)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(innerWidth * .08, y); ctx.bezierCurveTo(innerWidth * .3, y - 35, innerWidth * .62, y + 35, innerWidth * .92, y - 5); ctx.stroke(); requestAnimationFrame(frame); };
-      addEventListener('resize', resize, { passive: true }); resize(); requestAnimationFrame(frame);
-    }
+    document.addEventListener('astro:page-load', () => { syncTheme(); nav?.classList.remove('open'); menu?.setAttribute('aria-expanded', 'false'); });
   </script>
 </body>
 </html>
 <style is:global>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-:root{--bg:#07080c;--surface:#0e1218;--surface-2:#121720;--border:#202631;--border-strong:#2b3440;--text:#eef1f6;--text-dim:#a0a9b7;--text-soft:#6f7b8d;--accent:#4cc9f0;--accent-soft:rgba(76,201,240,.10);--signal:#ffb454;--success:#4ade80;--max:1240px;--r-sm:8px;--r-md:12px;--r-lg:18px;--dur:220ms;--ease:cubic-bezier(.22,1,.36,1);--shadow:0 20px 60px rgba(0,0,0,.24)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}body,button,input{font-synthesis:none}a{color:inherit;text-decoration:none}.skip-link{position:fixed;left:16px;top:-60px;z-index:100;padding:10px 13px;background:var(--text);color:var(--bg);border-radius:8px;font:600 11px 'JetBrains Mono'}.skip-link:focus{top:16px}.ambient{position:fixed;inset:0;z-index:-4;background:radial-gradient(circle at 74% 9%,rgba(76,201,240,.06),transparent 28%),radial-gradient(circle at 10% 88%,rgba(255,180,84,.025),transparent 24%)}.grid{position:fixed;inset:0;z-index:-3;opacity:.22;background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,black,transparent 86%)}.ambient-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:-2}.site-header{position:sticky;top:14px;z-index:40;width:min(var(--max),calc(100% - 32px));margin:14px auto 0;display:flex;align-items:center;gap:24px;padding:9px 10px;border:1px solid var(--border);background:rgba(7,8,12,.82);backdrop-filter:blur(18px);border-radius:14px}.brand{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;letter-spacing:-.02em;white-space:nowrap}.brand-mark{display:grid;place-items:center;width:30px;height:30px;border:1px solid rgba(76,201,240,.4);border-radius:9px;color:var(--accent);font:600 12px 'JetBrains Mono';background:linear-gradient(145deg,rgba(76,201,240,.13),rgba(76,201,240,.025))}.accent{color:var(--accent)}.nav{display:flex;gap:2px;margin-left:auto}.nav a{padding:8px 10px;border-radius:8px;color:#8792a3;font-size:12px;transition:color var(--dur) var(--ease),background var(--dur) var(--ease)}.nav a:hover,.nav a.active{color:var(--text);background:rgba(255,255,255,.055)}.header-actions{display:flex;align-items:center;gap:7px}.availability{display:inline-flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid rgba(74,222,128,.16);border-radius:8px;color:#b7d9c2;background:rgba(74,222,128,.025);font:9px 'JetBrains Mono';white-space:nowrap}.availability span{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 12px rgba(74,222,128,.7)}.command-trigger,.menu-trigger,.palette-top kbd{padding:8px 9px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.03);color:#909aaa;font:500 10px 'JetBrains Mono';cursor:pointer}.menu-trigger{display:none}.page-shell{width:min(var(--max),calc(100% - 32px));margin:0 auto;padding:76px 0 96px}.site-footer{width:min(var(--max),calc(100% - 32px));margin:0 auto;padding:22px 0 32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:18px;color:var(--text-soft);font:9px 'JetBrains Mono'}.footer-links{display:flex;gap:16px}.footer-links a:hover{color:var(--text)}:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.command-palette{width:min(620px,calc(100% - 24px));padding:0;border:0;background:transparent}.command-palette::backdrop{background:rgba(3,5,8,.68);backdrop-filter:blur(8px)}.palette-card{padding:13px;border:1px solid var(--border-strong);background:rgba(10,13,18,.97);border-radius:16px;box-shadow:var(--shadow)}.palette-top{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 10px;color:var(--text-soft);font:9px 'JetBrains Mono'}.command-palette input{width:100%;padding:13px;border:1px solid var(--border);border-radius:10px;outline:0;background:#0b0f15;color:var(--text);font:13px 'DM Sans'}.command-palette input:focus{border-color:rgba(76,201,240,.45);box-shadow:0 0 0 3px rgba(76,201,240,.08)}.command-results{display:grid;gap:3px;margin-top:8px}.command-item{display:grid;grid-template-columns:32px 1fr auto;gap:10px;padding:11px;border-radius:8px;color:#acb5c2}.command-item span{color:var(--accent);font:10px 'JetBrains Mono'}.command-item b{font-size:12px;font-weight:500}.command-item small{color:#5d6878}.command-item:hover{background:rgba(255,255,255,.045);color:var(--text)}.command-item[hidden]{display:none}@media(max-width:920px){.nav{position:absolute;left:0;right:0;top:calc(100% + 8px);display:none;flex-direction:column;padding:7px;border:1px solid var(--border);background:rgba(9,12,17,.97);backdrop-filter:blur(18px);border-radius:12px}.nav.open{display:flex}.nav a{padding:11px}.menu-trigger{display:inline-flex}.availability{display:none}}@media(max-width:620px){.site-header{top:8px;margin-top:8px;width:calc(100% - 20px);gap:10px}.brand{font-size:12px}.page-shell{width:calc(100% - 20px);padding-top:48px}.site-footer{width:calc(100% - 20px);flex-direction:column;align-items:flex-start}.command-trigger{display:none}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ambient-canvas{display:none}.ambient{background:radial-gradient(circle at 74% 9%,rgba(76,201,240,.045),transparent 28%)}}
-::selection{background:rgba(76,201,240,.22);color:var(--text)}
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
+:root{--color-bg:#f1f2f4;--color-surface:#fff;--color-border:#dcdee3;--color-border-strong:#c4c7cf;--color-ink:#191b20;--color-ink-dim:#5c6068;--color-ink-faint:#858991;--color-signal:#2d4fb0;--color-signal-dim:#e4e9f7;--color-success:#2e7d5b;--color-danger:#b0432d;--font-sans:'Geist',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--font-mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;--step--1:.8125rem;--step-0:1rem;--step-1:1.1875rem;--step-2:1.4375rem;--step-3:1.8125rem;--step-4:2.25rem;--step-5:clamp(2.75rem,5vw + 1rem,4.5rem);--space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-6:1.5rem;--space-8:2rem;--space-12:3rem;--space-16:4rem;--space-24:6rem;--radius-none:0;--radius-sm:2px;--radius-md:6px;--shadow-panel:0 8px 24px -8px rgba(20,21,26,.18);--ease-out:cubic-bezier(.22,1,.36,1);--duration-fast:120ms;--duration-base:200ms;--duration-slow:400ms}
+:root[data-theme='dark']{--color-bg:#15171b;--color-surface:#1b1e24;--color-border:#2a2d34;--color-border-strong:#3a3e47;--color-ink:#ecedef;--color-ink-dim:#a5a8b0;--color-ink-faint:#777c86;--color-signal:#6e8cff;--color-signal-dim:#1e2540;--color-success:#63bd91;--color-danger:#ed8d76;--shadow-panel:0 14px 34px -12px rgba(0,0,0,.4)}
+@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--color-bg:#15171b;--color-surface:#1b1e24;--color-border:#2a2d34;--color-border-strong:#3a3e47;--color-ink:#ecedef;--color-ink-dim:#a5a8b0;--color-ink-faint:#777c86;--color-signal:#6e8cff;--color-signal-dim:#1e2540;--color-success:#63bd91;--color-danger:#ed8d76;--shadow-panel:0 14px 34px -12px rgba(0,0,0,.4)}}
+*,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--color-bg)}body{margin:0;min-height:100vh;color:var(--color-ink);background:var(--color-bg);font-family:var(--font-sans);font-size:var(--step-0);line-height:1.6;overflow-x:hidden}a{color:inherit;text-decoration:none}button,input{font:inherit}::selection{color:var(--color-ink);background:color-mix(in srgb,var(--color-signal) 22%,transparent)}:focus-visible{outline:2px solid var(--color-signal);outline-offset:3px}.skip-link{position:fixed;left:12px;top:-60px;z-index:100;padding:9px 12px;color:var(--color-bg);background:var(--color-ink);border-radius:var(--radius-md);font:600 11px var(--font-mono)}.skip-link:focus{top:12px}.site-header{position:sticky;top:0;z-index:40;width:min(1180px,calc(100% - 2rem));min-height:60px;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;border-bottom:1px solid var(--color-border);background:color-mix(in srgb,var(--color-bg) 92%,transparent);backdrop-filter:blur(12px)}.wordmark{display:flex;align-items:center;gap:9px;justify-self:start;font-size:13px;font-weight:600;letter-spacing:-.01em}.wordmark img{width:22px;height:22px}.nav{display:flex;justify-self:center;gap:2px}.nav a{padding:7px 9px;border-radius:var(--radius-md);color:var(--color-ink-dim);font-size:13px;transition:color var(--duration-fast) var(--ease-out),background var(--duration-fast) var(--ease-out)}.nav a:hover,.nav a.active{color:var(--color-ink);background:var(--color-signal-dim)}.header-tools{display:flex;justify-self:end;gap:3px}.theme-toggle,.command-trigger,.menu-trigger{padding:7px 8px;color:var(--color-ink-dim);background:transparent;border:1px solid transparent;border-radius:var(--radius-md);cursor:pointer;font:10px var(--font-mono)}.theme-toggle:hover,.command-trigger:hover,.menu-trigger:hover{color:var(--color-ink);background:var(--color-surface);border-color:var(--color-border)}.menu-trigger{display:none}.page-shell{width:min(1180px,calc(100% - 2rem));margin:0 auto;padding:76px 0 90px}.site-footer{width:min(1180px,calc(100% - 2rem));margin:0 auto;padding:18px 0 28px;border-top:1px solid var(--color-border);display:flex;justify-content:space-between;gap:16px;color:var(--color-ink-faint);font:10px var(--font-mono)}.footer-links{display:flex;gap:14px}.footer-links a:hover{color:var(--color-ink)}.command-palette{width:min(560px,calc(100% - 24px));padding:0;border:0;background:transparent}.command-palette::backdrop{background:rgba(20,21,26,.34);backdrop-filter:blur(5px)}.palette-card{padding:11px;background:var(--color-surface);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);box-shadow:var(--shadow-panel)}.palette-top{display:flex;justify-content:space-between;padding:3px 4px 9px;color:var(--color-ink-dim);font:10px var(--font-mono)}.palette-top kbd{padding:2px 4px;border:1px solid var(--color-border);border-radius:4px;font:inherit}.command-palette input{width:100%;padding:11px 12px;color:var(--color-ink);background:var(--color-bg);border:1px solid var(--color-border);border-radius:var(--radius-md);outline:0}.command-palette input:focus{border-color:var(--color-signal)}.command-results{display:grid;gap:2px;margin-top:7px}.command-item{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:9px;padding:10px;color:var(--color-ink-dim);border-radius:var(--radius-md)}.command-item span{color:var(--color-signal);font:10px var(--font-mono)}.command-item strong{font-size:13px;font-weight:500}.command-item b{color:var(--color-ink-faint);font-weight:400}.command-item:hover,.command-item:focus-visible{color:var(--color-ink);background:var(--color-signal-dim)}.command-item[hidden]{display:none}@media(max-width:760px){.site-header{grid-template-columns:1fr auto;width:calc(100% - 1.25rem)}.nav{position:absolute;left:0;right:0;top:calc(100% + 7px);display:none;flex-direction:column;padding:5px;background:var(--color-surface);border:1px solid var(--color-border);box-shadow:var(--shadow-panel)}.nav.open{display:flex}.nav a{padding:10px}.menu-trigger{display:inline-flex}.theme-label{display:none}.page-shell{width:calc(100% - 1.25rem);padding-top:52px}.site-footer{width:calc(100% - 1.25rem);flex-direction:column;align-items:flex-start}}@media(max-width:520px){.command-trigger{display:none}}@media print{.site-header,.command-palette,.skip-link{display:none!important}body{color:#000;background:#fff}.site-footer{color:#000}a{text-decoration:underline}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
