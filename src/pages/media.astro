@@ -1,19 +1,24 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
 const items = [
-  {type:'VIDEO', title:'Finger Gesture Real-Time Cursor Tracking', meta:'Computer Vision · 0:45', body:'Demo slot reserved for the live hand-tracking and cursor-control workflow.'},
-  {type:'VIDEO', title:'Robo Soccer Match Highlights and Wireless Control', meta:'Robotics · 1:20', body:'Demo slot for field testing the differential-drive robot and browser controller.'},
-  {type:'VIDEO', title:'ESP32 MQTT HiveMQ Live Data Stream', meta:'IoT · 0:30', body:'Demo slot for Wokwi telemetry moving through the MQTT pipeline.'},
-  {type:'PHOTO', title:'National Seminar on AI for Good Governance', meta:'Seminars · New Delhi', body:'Event gallery for the seminar and participation record.'},
-  {type:'PHOTO', title:'AI Builders Weekend', meta:'Workshop · New Delhi', body:'Workshop gallery for the practical AI-agent build session.'},
-  {type:'PHOTO', title:'ESP32 and Sensor Testing Setup', meta:'Hardware · CUJ', body:'Hardware gallery for breadboard, OLED, and telemetry prototyping.'},
+  { type: 'Video', title: 'Finger Gesture Cursor Tracking', meta: 'Computer Vision', body: 'Reserved for the project demo once the original recording is added.', asset: '/assets/media/finger-gesture.mp4' },
+  { type: 'Video', title: 'Robo Soccer Match Highlights', meta: 'Robotics', body: 'Reserved for field footage and browser-based control demonstration.', asset: '/assets/media/robo-soccer.mp4' },
+  { type: 'Video', title: 'ESP32 MQTT Telemetry', meta: 'Edge and IoT', body: 'Reserved for a walkthrough of the simulated device and telemetry flow.', asset: '/assets/media/esp32-mqtt.mp4' },
+  { type: 'Photo', title: 'National Seminar on AI for Good Governance', meta: 'Event · New Delhi', body: 'Add the original event photograph when it is ready for publication.', asset: '/assets/media/ai-governance-seminar.jpg' },
+  { type: 'Photo', title: 'AI Builders Weekend', meta: 'Workshop · New Delhi', body: 'Add the original workshop photograph when it is ready for publication.', asset: '/assets/media/ai-builders-weekend.jpg' },
+  { type: 'Photo', title: 'ESP32 and Sensor Testing', meta: 'Hardware · CUJ', body: 'Add the original hardware photograph when it is ready for publication.', asset: '/assets/media/esp32-testing.jpg' },
 ];
 ---
-<Layout title="Media | Kaushal Kumar">
-  <div class="page-intro"><span class="mono">04 / MEDIA</span><h1>Proof lives in the work.</h1><p>A dedicated space for project demos, hardware builds, workshop moments, and event photography. Real assets can be added without changing the visual system.</p></div>
-  <div class="notice"><span class="tag mint">MEDIA READY</span><p>The architecture intentionally avoids invented video IDs or stock photography. Add the real files when available and each card can become a player or lightbox.</p></div>
-  <section class="media-grid">{items.map(item=><article class="media-card"><div class="thumb"><span>{item.type}</span><b>+</b></div><div class="copy"><span class="meta">{item.meta}</span><h2>{item.title}</h2><p>{item.body}</p></div></article>)}</section>
+<Layout title="Media | Kaushal Kumar" description="Project demos, hardware work, workshops, and event photography from Kaushal Kumar's technical journey.">
+  <header class="page-heading"><p class="eyebrow">Media</p><h1>See the work in context.</h1><p>Hardware, field tests, workshops, and project demonstrations belong here. The page is prepared for original assets and intentionally ships without fabricated media.</p></header>
+  <section class="media-grid">
+    {items.map((item) => <article class="media-item">
+      <div class="media-frame"><span>{item.type}</span><small>Asset path</small><code>{item.asset}</code></div>
+      <div class="media-copy"><p class="meta">{item.meta}</p><h2>{item.title}</h2><p>{item.body}</p></div>
+    </article>)}
+  </section>
 </Layout>
 <style>
-.page-intro{max-width:780px;padding:38px 0 55px}.mono,.meta{font:10px 'JetBrains Mono';color:var(--accent);letter-spacing:.08em}.page-intro h1{font-size:clamp(44px,6.5vw,76px);line-height:.98;letter-spacing:-.06em;margin:13px 0}.page-intro p,.copy p{color:var(--text-dim);line-height:1.8}.notice{display:flex;align-items:center;gap:16px;padding:14px 16px;border:1px solid rgba(74,222,128,.14);background:rgba(74,222,128,.03);border-radius:14px;margin-bottom:18px}.notice p{margin:0;color:#91a29f;font-size:11px;line-height:1.6}.tag.mint{font:9px 'JetBrains Mono';white-space:nowrap;color:#78ddb7;padding:5px 7px;border:1px solid rgba(74,222,128,.16);border-radius:7px}.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.media-card{overflow:hidden;border:1px solid var(--border);background:var(--panel);border-radius:16px}.thumb{height:155px;display:flex;align-items:center;justify-content:space-between;padding:17px;background:linear-gradient(135deg,rgba(76,201,240,.09),rgba(255,180,84,.025));font:9px 'JetBrains Mono';color:#7bcff0}.thumb b{font-size:42px;font-weight:300;color:rgba(255,255,255,.2)}.copy{padding:17px}.copy h2{font-size:18px;line-height:1.2;letter-spacing:-.02em;margin:9px 0}.copy p{font-size:11px;margin-bottom:3px}@media(max-width:900px){.media-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.media-grid{grid-template-columns:1fr}.notice{align-items:flex-start;flex-direction:column}}
+.page-heading{max-width:820px;padding:45px 0 65px}.eyebrow{margin:0 0 14px;color:var(--color-signal);font:12px var(--font-mono)}.page-heading h1{max-width:760px;margin:0;font-size:var(--step-5);line-height:1;letter-spacing:-.055em}.page-heading>p:last-child{max-width:700px;margin:23px 0 0;color:var(--color-ink-dim);font-size:17px;line-height:1.75}.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.media-item{border-top:1px solid var(--color-border)}.media-frame{height:220px;display:flex;flex-direction:column;justify-content:space-between;padding:14px;border:1px solid var(--color-border);border-top:0;background:repeating-linear-gradient(135deg,var(--color-surface),var(--color-surface) 12px,var(--color-bg) 12px,var(--color-bg) 13px);color:var(--color-ink-faint);font:10px var(--font-mono)}.media-frame small{margin-top:auto;font-size:9px}.media-frame code{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--color-ink-dim);font:8px var(--font-mono)}.media-copy{padding-top:15px}.meta{margin:0;color:var(--color-ink-faint);font:10px var(--font-mono)}.media-copy h2{margin:7px 0 0;font-size:19px;line-height:1.25;letter-spacing:-.025em}.media-copy>p:last-child{margin:9px 0 0;color:var(--color-ink-dim);font-size:12px;line-height:1.65}@media(max-width:900px){.media-grid{grid-template-columns:1fr 1fr}}@media(max-width:620px){.media-grid{grid-template-columns:1fr}.page-heading{padding-top:28px}}
 </style>
