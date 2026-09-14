@@ -1,74 +1,86 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-const projects = [
-  {num:'01', title:'Finger Gesture Cursor Control', category:'Computer Vision', description:'Real-time hand tracking mapped to cursor interaction, built for a local CPU-first workflow.'},
-  {num:'02', title:'ESP32 IoT Device Simulator', category:'Edge & IoT', description:'A virtual edge-device environment for testing MQTT telemetry, sensor data, and dashboard flows.'},
-  {num:'03', title:'Robo Soccer / NSECT-2026', category:'Robotics', description:'A wireless differential-drive robot controlled through a browser-based multi-touch interface.'},
-];
+
+const projects = (await getCollection('projects'))
+  .filter((entry) => entry.data.featured)
+  .sort((a, b) => a.id.localeCompare(b.id));
 ---
 <Layout>
   <section class="hero">
+    <div class="hero-field" aria-hidden="true"><canvas id="calibration-field"></canvas><div class="field-caption">flow / calibration / 01</div></div>
     <div class="hero-copy">
-      <div class="eyebrow"><span class="pulse"></span> MATHEMATICS · AI · SYSTEMS</div>
-      <p class="overline">KAUSHAL KUMAR · B.TECH MATHEMATICS &amp; COMPUTING</p>
-      <h1>I build software and hardware that <em>meet the real world.</em></h1>
-      <p class="lede">I am a Mathematics &amp; Computing student at Central University of Jammu. My work sits across applied AI, computer vision, embedded systems, robotics, and the engineering discipline that turns experiments into usable prototypes.</p>
-      <div class="actions"><a class="primary" href="/projects/">Explore selected work <span>↗</span></a><a class="secondary" href="/contact/">Start a conversation</a></div>
-    </div>
-    <aside class="hero-aside">
-      <div class="identity-card">
-        <div class="card-label"><span>PROFILE</span><span>CUJ · 2025 / 2029</span></div>
-        <div class="profile-line"><span class="avatar">K</span><div><strong>Kaushal Kumar</strong><span>Builder · mentor · mathematics student</span></div></div>
-        <div class="mini-rule"></div>
-        <dl><div><dt>Current</dt><dd>AI / systems / robotics</dd></div><div><dt>Location</dt><dd>India</dd></div><div><dt>Looking for</dt><dd>Internships + technical teams</dd></div></dl>
-      </div>
-      <div class="quote-card"><span class="quote-mark">“</span><p>Start with the constraint. Build enough to measure it. Then improve what actually matters.</p><small>Working principle</small></div>
-    </aside>
-  </section>
-
-  <section class="proof" aria-label="Areas of work">
-    <div><span class="proof-value">Applied AI</span><span class="proof-label">Models, experiments, evaluation</span></div>
-    <div><span class="proof-value">Computer Vision</span><span class="proof-label">Interaction and real-time tracking</span></div>
-    <div><span class="proof-value">Edge Systems</span><span class="proof-label">ESP32, telemetry, embedded workflows</span></div>
-    <div><span class="proof-value">Robotics</span><span class="proof-label">Control, hardware, browser interfaces</span></div>
-  </section>
-
-  <section class="feature-section">
-    <div class="section-heading"><div><span class="section-index">01 / ENGINEERING SIGNAL</span><h2>Show the system, not just the title.</h2></div><p>The portfolio uses technical artifacts and project structure to make the work easier to understand.</p></div>
-    <div class="feature-grid">
-      <article class="terminal panel">
-        <div class="terminal-head"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="terminal-title">gesture-control / runtime</span><span class="live">DEMO VIEW</span></div>
-        <div class="terminal-body">
-          <div class="terminal-row"><span>$ start vision-engine</span><b>ready</b></div>
-          <div class="terminal-row"><span>camera pipeline</span><b>online</b></div>
-          <div class="terminal-row"><span>hand landmarks</span><b>tracked</b></div>
-          <div class="terminal-row"><span>tracking mode</span><b>local</b></div>
-          <div class="terminal-row"><span>runtime</span><b>CPU</b></div>
-          <div class="terminal-row"><span>interaction</span><b>gesture mapped</b></div>
-          <div class="terminal-row"><span>dependency</span><b>offline capable</b></div>
-          <div class="terminal-divider"></div>
-          <div class="terminal-hint"><span>PINCH</span> click <span>PEACE</span> scroll <span>FIST</span> freeze</div>
-        </div>
-      </article>
-      <article class="signal panel">
-        <span class="section-index">HOW I WORK</span>
-        <h3>From problem to prototype.</h3>
-        <div class="workflow"><div><span>01</span><strong>Frame</strong><p>Define the problem, inputs, constraints, and what success should look like.</p></div><div><span>02</span><strong>Build</strong><p>Create the smallest working system that exposes the important behavior.</p></div><div><span>03</span><strong>Improve</strong><p>Test what matters, remove bottlenecks, and document the tradeoffs.</p></div></div>
-      </article>
+      <p class="eyebrow">Mathematics &amp; Computing student</p>
+      <h1>I build and explain applied AI systems.</h1>
+      <p class="lede">My work spans computer vision, embedded systems, robotics, and machine learning. I like taking an idea from a clear constraint to a working prototype, then understanding the behavior well enough to explain it.</p>
+      <div class="actions"><a class="primary" href="/projects/">See selected work</a><a class="secondary" href="/contact/">Get in touch</a></div>
     </div>
   </section>
 
-  <section class="work-section">
-    <div class="section-heading"><div><span class="section-index">02 / SELECTED WORK</span><h2>Systems I have built.</h2></div><a class="text-link" href="/projects/">View project archive ↗</a></div>
-    <div class="project-list">{projects.map((p)=><a class="project-row" href="/projects/"><span class="project-num">{p.num}</span><div class="project-main"><span class="tag">{p.category}</span><h3>{p.title}</h3><p>{p.description}</p></div><span class="project-arrow">↗</span></a>)}</div>
+  <section class="facts" aria-label="Profile summary">
+    <div><span>Focus</span><strong>Computer Vision · ML · Embedded · Robotics</strong></div>
+    <div><span>Education</span><strong>B.Tech Mathematics &amp; Computing · Central University of Jammu</strong></div>
+    <div><span>Current</span><strong>Technical mentorship through e-Yantra at CUJ</strong></div>
   </section>
 
-  <section class="closing panel">
-    <div><span class="section-index">03 / NEXT CONVERSATION</span><h2>Looking for the right technical problem.</h2><p>Internship, research opportunity, engineering team, collaboration, or a project worth prototyping. I am interested in work where curiosity becomes something tangible.</p></div>
-    <a class="primary" href="/contact/">Get in touch <span>→</span></a>
+  <section class="section-block">
+    <div class="section-heading"><div><span class="section-kicker">Selected work</span><h2>Projects worth opening.</h2></div><a class="text-link" href="/projects/">All work ↗</a></div>
+    <div class="project-list">
+      {projects.map((project, index) => (
+        <a class="project-row" href={`/projects/${project.id}/`}>
+          <span class="project-index">{String(index + 1).padStart(2, '0')}</span>
+          <div><span class="tag">{project.data.category}</span><h3>{project.data.title}</h3><p>{project.data.summary}</p></div>
+          <span class="project-arrow">↗</span>
+        </a>
+      ))}
+    </div>
   </section>
+
+  <section class="method section-block">
+    <div class="section-heading"><div><span class="section-kicker">How I work</span><h2>Frame, build, improve.</h2></div></div>
+    <div class="method-grid">
+      <article><span>01</span><h3>Frame</h3><p>Define the problem, the inputs, the constraints, and what a useful result means.</p></article>
+      <article><span>02</span><h3>Build</h3><p>Create the smallest working system that exposes the important behavior.</p></article>
+      <article><span>03</span><h3>Improve</h3><p>Test what matters, make tradeoffs explicit, and document what changed.</p></article>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div><span class="section-kicker">Start a conversation</span><h2>Have a problem worth exploring?</h2><p>Internship, research opportunity, technical team, or a project that needs a prototype. I am interested in useful work with a clear learning loop.</p></div>
+    <a class="primary" href="/contact/">Contact me</a>
+  </section>
+
+  <script>
+    const canvas = document.querySelector('#calibration-field');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    if (canvas instanceof HTMLCanvasElement) {
+      const ctx = canvas.getContext('2d');
+      const host = canvas.parentElement;
+      const points = Array.from({ length: 95 }, (_, i) => ({ x: (i * 0.173) % 1, y: (i * 0.379) % 1, phase: i * 0.21 }));
+      let visible = true;
+      const resize = () => { const rect = host?.getBoundingClientRect(); if (!rect || !ctx) return; const dpr = Math.min(devicePixelRatio || 1, 1.5); canvas.width = rect.width * dpr; canvas.height = rect.height * dpr; canvas.style.width = `${rect.width}px`; canvas.style.height = `${rect.height}px`; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+      const draw = (time = 0) => {
+        if (!ctx || !host) return;
+        const rect = host.getBoundingClientRect();
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        for (const point of points) {
+          const x = point.x * rect.width;
+          const y = ((point.y + (time * 0.000012) + Math.sin(x * 0.012 + point.phase) * 0.035) % 1) * rect.height;
+          const angle = Math.sin(x * 0.009 + y * 0.006 + point.phase) * 0.65;
+          const length = 8;
+          ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.strokeStyle = 'currentColor'; ctx.globalAlpha = point.phase % 1 > 0.88 ? 0.35 : 0.1; ctx.beginPath(); ctx.moveTo(-length / 2, 0); ctx.lineTo(length / 2, 0); ctx.stroke(); ctx.restore();
+        }
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = 'currentColor'; ctx.globalAlpha = 0.16; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(rect.width * 0.76, rect.height * 0.44, 36, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(rect.width * 0.76, rect.height * 0.44, 2, 0, Math.PI * 2); ctx.fill();
+      };
+      const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible && !reduce.matches) requestAnimationFrame(loop); }, { threshold: 0.02 });
+      observer.observe(host);
+      const loop = (time) => { if (!visible || reduce.matches) return; draw(time); requestAnimationFrame(loop); };
+      addEventListener('resize', resize, { passive: true }); resize(); draw();
+      if (!reduce.matches) requestAnimationFrame(loop);
+    }
+  </script>
 </Layout>
-
 <style>
-.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.6fr);gap:70px;align-items:end;padding:48px 0 70px}.hero-copy{max-width:850px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid rgba(74,222,128,.16);border-radius:999px;background:rgba(74,222,128,.03);color:#b4d9bf;font:9px 'JetBrains Mono';letter-spacing:.1em}.pulse{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 11px rgba(74,222,128,.7)}.overline,.section-index{font:10px 'JetBrains Mono';color:var(--accent);letter-spacing:.08em}.overline{margin:28px 0 15px;color:#626d7e}.hero h1{max-width:860px;margin:0;font-size:clamp(48px,7.5vw,92px);line-height:.96;letter-spacing:-.065em}.hero h1 em{font-style:normal;color:#c9f3f7}.lede{max-width:730px;margin:24px 0 28px;color:var(--text-dim);font-size:16px;line-height:1.85}.actions{display:flex;gap:9px;flex-wrap:wrap}.primary,.secondary{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 15px;border-radius:10px;font-size:12px;font-weight:600;transition:transform var(--dur) var(--ease),background var(--dur) var(--ease),border-color var(--dur) var(--ease)}.primary{background:var(--text);color:var(--bg)}.primary:hover{transform:translateY(-2px)}.secondary{border:1px solid var(--border-strong);background:rgba(255,255,255,.025);color:#c7d0da}.secondary:hover{border-color:rgba(76,201,240,.28);background:var(--accent-soft)}.hero-aside{display:grid;gap:10px}.panel,.identity-card,.quote-card,.project-row{border:1px solid var(--border);background:var(--panel);backdrop-filter:blur(14px);border-radius:17px}.identity-card{padding:17px}.card-label{display:flex;justify-content:space-between;gap:12px;color:#606e80;font:9px 'JetBrains Mono'}.profile-line{display:flex;align-items:center;gap:12px;margin:24px 0 16px}.avatar{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;border:1px solid rgba(76,201,240,.3);background:rgba(76,201,240,.07);font:600 15px 'JetBrains Mono';color:#c8f7fc}.profile-line strong,.profile-line span{display:block}.profile-line strong{font-size:14px;letter-spacing:-.02em}.profile-line span{margin-top:3px;color:#778397;font-size:11px}.mini-rule{height:1px;background:var(--border);margin-bottom:12px}.identity-card dl{margin:0;display:grid;gap:8px}.identity-card dl div{display:flex;justify-content:space-between;gap:14px}.identity-card dt{color:#657286;font:9px 'JetBrains Mono'}.identity-card dd{margin:0;color:#ccd5e0;font-size:11px;text-align:right}.quote-card{padding:18px}.quote-mark{display:block;color:var(--accent);font:30px Georgia;line-height:.6}.quote-card p{margin:13px 0 10px;color:#b8c4d3;font-size:13px;line-height:1.65}.quote-card small{color:#5f6d80;font:9px 'JetBrains Mono'}.proof{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:0}.proof>div{padding:19px 17px;border-right:1px solid var(--border)}.proof>div:last-child{border-right:0}.proof-value{display:block;font:600 17px 'DM Sans';letter-spacing:-.025em;color:#edf4fa}.proof-label{display:block;margin-top:7px;color:#6d7a8c;font-size:10px;line-height:1.4}.feature-section,.work-section{padding-top:92px}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:18px}.section-heading h2{margin:8px 0 0;font-size:30px;letter-spacing:-.04em}.section-heading>p{max-width:340px;margin:0;color:#728096;font-size:12px;line-height:1.6}.text-link{color:#bfeff4;font-size:11px}.feature-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}.terminal{overflow:hidden;background:#090d13}.terminal-head{display:flex;align-items:center;gap:6px;padding:11px 13px;border-bottom:1px solid var(--border);color:#5f6c7e;font:9px 'JetBrains Mono'}.window-dot{width:6px;height:6px;border-radius:50%;background:#273143}.terminal-title{margin-left:5px}.live{margin-left:auto;color:#65d6aa}.terminal-body{padding:20px 18px;font:11px/1.7 'JetBrains Mono'}.terminal-row{display:grid;grid-template-columns:1fr auto;gap:18px;padding:4px 0;color:#8f9caf}.terminal-row:first-child span{color:#b9c6d6}.terminal-row b{font-weight:500;color:#b8f7df}.terminal-divider{height:1px;background:var(--border);margin:12px 0}.terminal-hint{color:#667488}.terminal-hint span{color:#ffbf66}.signal{padding:20px 21px}.signal h3{margin:11px 0 20px;font-size:23px;letter-spacing:-.03em}.workflow{display:grid;gap:16px}.workflow>div{display:grid;grid-template-columns:34px 1fr;column-gap:9px}.workflow>div>span{grid-row:span 2;color:var(--accent);font:10px 'JetBrains Mono'}.workflow strong{font-size:12px}.workflow p{margin:4px 0 0;color:#7f8da0;font-size:11px;line-height:1.55}.project-list{display:grid;gap:8px}.project-row{display:grid;grid-template-columns:42px minmax(0,1fr) 25px;align-items:center;gap:18px;padding:17px;transition:transform var(--dur) var(--ease),border-color var(--dur) var(--ease),background var(--dur) var(--ease)}.project-row:hover{transform:translateX(4px);border-color:rgba(76,201,240,.25);background:var(--accent-soft)}.project-num{color:#4d5a6d;font:10px 'JetBrains Mono'}.tag{display:inline-block;padding:4px 6px;border-radius:6px;border:1px solid rgba(76,201,240,.16);background:rgba(76,201,240,.035);color:#78cbed;font:9px 'JetBrains Mono'}.project-main h3{margin:9px 0 5px;font-size:17px;letter-spacing:-.025em}.project-main p{margin:0;color:#78869a;font-size:11px;line-height:1.5}.project-arrow{justify-self:end;color:var(--accent)}.closing{margin-top:92px;padding:26px;display:flex;justify-content:space-between;align-items:center;gap:30px}.closing h2{margin:8px 0;color:#f1f5f9;font-size:27px;letter-spacing:-.035em}.closing p{max-width:650px;margin:0;color:#7d8b9e;font-size:12px;line-height:1.7}@media(max-width:940px){.hero{grid-template-columns:1fr;gap:30px}.hero-aside{grid-template-columns:1fr 1fr}.feature-grid{grid-template-columns:1fr}}@media(max-width:680px){.hero{padding-top:28px}.hero h1{font-size:49px}.lede{font-size:14px}.hero-aside{grid-template-columns:1fr}.proof{grid-template-columns:1fr 1fr}.proof>div:nth-child(2){border-right:0}.proof>div:nth-child(-n+2){border-bottom:1px solid var(--border)}.section-heading{align-items:flex-start;flex-direction:column;gap:8px}.closing{align-items:flex-start;flex-direction:column}.closing .primary{width:100%}}
+.hero{position:relative;min-height:590px;display:grid;align-items:center;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);gap:40px;padding:70px 0 84px}.hero-copy{position:relative;z-index:2;max-width:760px}.eyebrow{display:inline-block;margin:0 0 18px;color:var(--color-signal);font:600 13px var(--font-mono)}.hero h1{max-width:720px;margin:0;font-size:var(--step-5);line-height:.98;letter-spacing:-.055em}.lede{max-width:650px;margin:24px 0 28px;color:var(--color-ink-dim);font-size:clamp(16px,1.8vw,19px);line-height:1.72}.actions{display:flex;gap:8px;flex-wrap:wrap}.primary,.secondary{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:var(--radius-md);font-size:13px;font-weight:600;transition:transform var(--duration-base) var(--ease-out),color var(--duration-base) var(--ease-out),background var(--duration-base) var(--ease-out),border-color var(--duration-base) var(--ease-out)}.primary{background:var(--color-ink);color:var(--color-bg)}.primary:hover{transform:translateY(-1px)}.secondary{border:1px solid var(--color-border-strong);color:var(--color-ink);background:var(--color-surface)}.secondary:hover{border-color:var(--color-signal);color:var(--color-signal)}.hero-field{position:absolute;inset:30px 0 25px 47%;color:var(--color-signal);border-left:1px solid var(--color-border);overflow:hidden;mask-image:linear-gradient(to right,transparent,black 12%,black 88%,transparent)}.hero-field::before{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--color-border) 1px,transparent 1px),linear-gradient(90deg,var(--color-border) 1px,transparent 1px);background-size:52px 52px;opacity:.35;mask-image:linear-gradient(to right,black,transparent 92%)}#calibration-field{display:block;width:100%;height:100%}.field-caption{position:absolute;right:18px;bottom:16px;padding:4px 6px;background:var(--color-surface);color:var(--color-ink-faint);font:9px var(--font-mono)}.facts{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border)}.facts>div{padding:18px 16px;border-right:1px solid var(--color-border)}.facts>div:last-child{border-right:0}.facts span{display:block;color:var(--color-ink-faint);font:10px var(--font-mono);margin-bottom:8px}.facts strong{display:block;color:var(--color-ink);font-size:13px;line-height:1.55;font-weight:500}.section-block{padding-top:92px}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:17px}.section-kicker{color:var(--color-ink-faint);font:11px var(--font-mono)}.section-heading h2{margin:6px 0 0;font-size:var(--step-3);letter-spacing:-.035em}.text-link{color:var(--color-signal);font-size:12px}.project-list{border-top:1px solid var(--color-border)}.project-row{display:grid;grid-template-columns:50px minmax(0,1fr) 28px;align-items:center;gap:18px;padding:22px 2px;border-bottom:1px solid var(--color-border);transition:padding-left var(--duration-base) var(--ease-out),background var(--duration-base) var(--ease-out)}.project-row:hover{padding-left:10px;background:color-mix(in srgb,var(--color-signal-dim) 40%,transparent)}.project-index{color:var(--color-ink-faint);font:11px var(--font-mono)}.tag{display:inline-block;padding:4px 6px;border:1px solid var(--color-border);border-radius:var(--radius-md);color:var(--color-signal);background:var(--color-surface);font:9px var(--font-mono)}.project-row h3{margin:8px 0 4px;font-size:21px;letter-spacing:-.025em}.project-row p{max-width:700px;margin:0;color:var(--color-ink-dim);font-size:13px;line-height:1.6}.project-arrow{justify-self:end;color:var(--color-signal)}.method-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border)}.method-grid article{padding:20px 16px 22px;border-right:1px solid var(--color-border)}.method-grid article:last-child{border-right:0}.method-grid span{color:var(--color-signal);font:11px var(--font-mono)}.method-grid h3{margin:18px 0 7px;font-size:20px;letter-spacing:-.025em}.method-grid p{margin:0;color:var(--color-ink-dim);font-size:13px;line-height:1.65}.closing{display:flex;justify-content:space-between;align-items:end;gap:30px;padding:84px 0 0}.closing h2{margin:7px 0;color:var(--color-ink);font-size:var(--step-3);letter-spacing:-.035em}.closing p{max-width:650px;margin:0;color:var(--color-ink-dim);font-size:13px;line-height:1.7}.closing .primary{flex:0 0 auto}@media(max-width:850px){.hero{grid-template-columns:1fr;min-height:560px}.hero-field{left:28%;inset:35px 0 25px 28%;opacity:.75}.facts,.method-grid{grid-template-columns:1fr}.facts>div,.method-grid article{border-right:0;border-bottom:1px solid var(--color-border)}.facts>div:last-child,.method-grid article:last-child{border-bottom:0}.closing{align-items:flex-start;flex-direction:column}.closing .primary{width:100%}}@media(max-width:560px){.hero{min-height:610px;padding-top:48px}.hero h1{font-size:clamp(2.65rem,12vw,4rem)}.lede{font-size:16px}.hero-field{left:0;top:250px;border-left:0;opacity:.55}.project-row{grid-template-columns:28px 1fr 18px;gap:12px}.project-row h3{font-size:18px}.project-row p{font-size:12px}}
 </style>
