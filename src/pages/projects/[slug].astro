@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+<Layout title={`${project.data.title} | Kaushal Kumar`} description={project.data.summary}>
+  <article class="case-study">
+    <header class="case-heading">
+      <div class="case-meta"><span>{project.data.category}</span><span>{project.data.year}</span><span>{project.data.status}</span></div>
+      <h1>{project.data.title}</h1>
+      <p>{project.data.summary}</p>
+      <div class="case-links">{project.data.repoUrl && <a class="primary" href={project.data.repoUrl} target="_blank" rel="noopener noreferrer">View repository ↗</a>}{project.data.demoVideo && <a class="secondary" href={project.data.demoVideo} target="_blank" rel="noopener noreferrer">Watch demo ↗</a>}<a class="secondary" href="/projects/">Back to work</a></div>
+    </header>
+
+    {project.data.metrics && <div class="metric-strip">{project.data.metrics.map((metric) => <div><b>{metric.value}</b><span>{metric.label}</span></div>)}</div>}
+
+    <div class="case-layout">
+      <aside><p>Case study</p><span>Built with Astro content</span></aside>
+      <div class="prose"><Content /></div>
+    </div>
+  </article>
+</Layout>
+<style>
+.case-heading{max-width:900px;padding:45px 0 65px}.case-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--color-ink-faint);font:10px var(--font-mono)}.case-meta span{padding-right:10px;border-right:1px solid var(--color-border)}.case-meta span:last-child{border-right:0}.case-heading h1{max-width:850px;margin:17px 0 14px;font-size:var(--step-5);line-height:.98;letter-spacing:-.055em}.case-heading>p{max-width:720px;margin:0;color:var(--color-ink-dim);font-size:18px;line-height:1.7}.case-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:25px}.primary,.secondary{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:0 14px;border-radius:var(--radius-md);font-size:12px;font-weight:600}.primary{color:var(--color-bg);background:var(--color-ink)}.secondary{color:var(--color-ink);background:var(--color-surface);border:1px solid var(--color-border-strong)}.secondary:hover{color:var(--color-signal);border-color:var(--color-signal)}.metric-strip{display:flex;flex-wrap:wrap;border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border)}.metric-strip>div{min-width:150px;padding:17px 15px;border-right:1px solid var(--color-border)}.metric-strip>div:last-child{border-right:0}.metric-strip b,.metric-strip span{display:block}.metric-strip b{font:600 18px var(--font-mono)}.metric-strip span{margin-top:5px;color:var(--color-ink-faint);font:10px var(--font-mono)}.case-layout{display:grid;grid-template-columns:190px minmax(0,700px);gap:55px;padding-top:70px}.case-layout aside{color:var(--color-ink-faint);font:10px var(--font-mono)}.case-layout aside p{margin:0 0 8px;color:var(--color-ink)}.case-layout aside span{line-height:1.5}.prose{font-size:15px;line-height:1.8;color:var(--color-ink-dim)}.prose :global(h2){margin:0 0 12px;padding-top:10px;color:var(--color-ink);font-size:25px;letter-spacing:-.03em}.prose :global(h2:not(:first-child)){margin-top:55px}.prose :global(p){margin:0 0 15px}.prose :global(ul){margin:0;padding-left:20px}.prose :global(li){margin:5px 0}.prose :global(a){color:var(--color-signal)}@media(max-width:760px){.case-heading{padding-top:28px}.case-heading>p{font-size:16px}.case-layout{grid-template-columns:1fr;gap:25px;padding-top:45px}.case-layout aside{border-top:1px solid var(--color-border);padding-top:15px;order:2}.metric-strip>div{flex:1 1 45%;min-width:0}.metric-strip>div:nth-child(2n){border-right:0}}
+</style>
