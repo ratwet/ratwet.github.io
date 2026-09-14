@@ -1,104 +1,112 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-
 interface Props { title?: string; description?: string; }
-const { title = 'Kaushal Kumar | AI/ML, Systems & Mathematics', description = 'Portfolio of Kaushal Kumar, a Mathematics & Computing student building practical AI, computer vision, edge systems, robotics, and developer tools.' } = Astro.props;
+const { title = 'Kaushal Kumar | Mathematics, AI and Systems', description = 'Kaushal Kumar is a Mathematics & Computing student building practical AI, computer vision, edge systems and robotics.' } = Astro.props;
 const currentPath = Astro.url.pathname;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://ratwet.github.io');
 const links = [
-  { href:'/', label:'Home' },
-  { href:'/about/', label:'About' },
-  { href:'/experience/', label:'Experience' },
-  { href:'/projects/', label:'Projects' },
-  { href:'/media/', label:'Media' },
-  { href:'/contact/', label:'Contact' },
+  { href: '/', label: 'Home' },
+  { href: '/about/', label: 'About' },
+  { href: '/experience/', label: 'Experience' },
+  { href: '/projects/', label: 'Projects' },
+  { href: '/media/', label: 'Media' },
+  { href: '/contact/', label: 'Contact' },
 ];
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Kaushal Kumar',
+  url: 'https://ratwet.github.io/',
+  sameAs: ['https://github.com/ratwet', 'https://linkedin.com/in/kaushal-kumar-072739206'],
+  jobTitle: 'Mathematics & Computing Student',
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'Central University of Jammu' },
+  knowsAbout: ['Artificial Intelligence', 'Machine Learning', 'Computer Vision', 'Robotics', 'Embedded Systems', 'Mathematics'],
+};
 ---
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#07090e" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#07080c" />
   <meta name="description" content={description} />
+  <meta name="robots" content="index, follow" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content={Astro.url} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content="https://ratwet.github.io/og.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content="https://ratwet.github.io/og.svg" />
+  <link rel="canonical" href={canonical} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="/site.webmanifest" />
   <title>{title}</title>
+  <script type="application/ld+json" set:html={JSON.stringify(personJsonLd)}></script>
   <ClientRouter fallback="swap" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="ambient" aria-hidden="true"></div>
-  <canvas id="global-canvas" transition:persist="global-canvas" aria-hidden="true"></canvas>
-  <div class="noise" aria-hidden="true"></div>
-
+  <div class="grid" aria-hidden="true"></div>
   <header class="site-header">
-    <a class="brand" href="/" aria-label="Kaushal Kumar home">
-      <span class="brand-mark">K</span>
-      <span class="brand-word">kaushal<span class="accent">.</span></span>
-    </a>
+    <a class="brand" href="/" aria-label="Kaushal Kumar home"><span class="brand-mark" aria-hidden="true">K</span><span>Kaushal Kumar</span></a>
     <nav class="nav" aria-label="Primary navigation">
-      {links.map((link)=><a class:active={currentPath===link.href || (link.href!=='/' && currentPath.startsWith(link.href))} href={link.href}>{link.label}</a>)}
+      {links.map((link) => <a class:active={currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href))} href={link.href}>{link.label}</a>)}
     </nav>
     <div class="header-actions">
-      <a class="availability" href="/contact/" aria-label="Available for selected collaborations"><span></span>Available</a>
+      <a class="availability" href="/contact/"><span></span>Available for internships</a>
       <button class="command-trigger" id="command-trigger" type="button" aria-label="Open command palette">⌘ K</button>
-      <button class="menu-trigger" id="menu-trigger" type="button" aria-label="Open navigation" aria-expanded="false">Menu</button>
+      <button class="menu-trigger" id="menu-trigger" type="button" aria-label="Toggle navigation" aria-expanded="false">Menu</button>
     </div>
   </header>
-
   <main id="main-content" class="page-shell"><slot /></main>
-
   <footer class="site-footer">
-    <div><span>© {new Date().getFullYear()} Kaushal Kumar</span><span class="footer-sep">/</span><span>Built with Astro</span></div>
-    <div class="footer-links"><a href="https://github.com/ratwet" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://linkedin.com/in/kaushal-kumar-072739206" target="_blank" rel="noreferrer">LinkedIn ↗</a></div>
+    <span>© {new Date().getFullYear()} Kaushal Kumar</span>
+    <span>Built with Astro</span>
+    <span class="footer-links"><a href="https://github.com/ratwet" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://linkedin.com/in/kaushal-kumar-072739206" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></span>
   </footer>
-
-  <dialog id="command-palette" class="command-palette" aria-label="Site navigation">
+  <dialog id="command-palette" class="command-palette" aria-label="Command palette">
     <div class="palette-card">
-      <div class="palette-top"><span>Command Center</span><kbd>ESC</kbd></div>
-      <input id="command-input" type="search" placeholder="Search pages and sections..." autocomplete="off" />
-      <div id="command-results" class="command-results">
-        {links.map((link,index)=><a class="command-item" data-label={link.label.toLowerCase()} href={link.href}><span>0{index+1}</span>{link.label}<b>↗</b></a>)}
-      </div>
+      <div class="palette-top"><span>Navigate</span><kbd>ESC</kbd></div>
+      <input id="command-input" type="search" placeholder="Search pages" autocomplete="off" />
+      <div class="command-results">{links.map((link, i) => <a class="command-item" data-label={link.label.toLowerCase()} href={link.href}><span>0{i + 1}</span><b>{link.label}</b><small>↗</small></a>)}</div>
     </div>
   </dialog>
-
   <script>
-    const canvas = document.querySelector('#global-canvas');
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (canvas instanceof HTMLCanvasElement && !reduced.matches && canvas.dataset.running !== 'true') {
-      canvas.dataset.running = 'true';
+    const command = document.querySelector('#command-palette');
+    const trigger = document.querySelector('#command-trigger');
+    const input = document.querySelector('#command-input');
+    const items = [...document.querySelectorAll('.command-item')];
+    const menu = document.querySelector('#menu-trigger');
+    const nav = document.querySelector('.nav');
+    const openPalette = () => { if (command instanceof HTMLDialogElement) { command.showModal(); input?.focus(); } };
+    trigger?.addEventListener('click', openPalette);
+    addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); } });
+    input?.addEventListener('input', () => { const q = input.value.trim().toLowerCase(); items.forEach((item) => { if (item instanceof HTMLElement) item.hidden = !item.dataset.label?.includes(q); }); });
+    command?.addEventListener('click', (e) => { if (e.target === command && command instanceof HTMLDialogElement) command.close(); });
+    menu?.addEventListener('click', () => { const open = nav?.classList.toggle('open') ?? false; menu.setAttribute('aria-expanded', String(open)); });
+    addEventListener('click', (e) => { if (!(e.target instanceof Element)) return; if (!e.target.closest('.site-header')) { nav?.classList.remove('open'); menu?.setAttribute('aria-expanded', 'false'); } });
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    const canvas = document.createElement('canvas');
+    canvas.className = 'ambient-canvas';
+    canvas.setAttribute('aria-hidden', 'true');
+    if (!reduce.matches && window.innerWidth > 760) {
+      document.body.prepend(canvas);
       const ctx = canvas.getContext('2d');
-      const dots = Array.from({length:30},()=>({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.00018,vy:(Math.random()-.5)*.00018}));
-      const resize=()=>{canvas.width=Math.floor(innerWidth*devicePixelRatio);canvas.height=Math.floor(innerHeight*devicePixelRatio);canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx?.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)};
-      const frame=()=>{if(!ctx)return;ctx.clearRect(0,0,innerWidth,innerHeight);const g=ctx.createRadialGradient(innerWidth*.58,innerHeight*.18,0,innerWidth*.58,innerHeight*.18,Math.max(innerWidth,innerHeight)*.72);g.addColorStop(0,'rgba(0,242,254,.055)');g.addColorStop(1,'rgba(7,9,14,0)');ctx.fillStyle=g;ctx.fillRect(0,0,innerWidth,innerHeight);dots.forEach(p=>{p.x+=p.vx*16;p.y+=p.vy*16;if(p.x<0||p.x>1)p.vx*=-1;if(p.y<0||p.y>1)p.vy*=-1});for(let i=0;i<dots.length;i++)for(let j=i+1;j<dots.length;j++){const a=dots[i],b=dots[j],dx=(a.x-b.x)*innerWidth,dy=(a.y-b.y)*innerHeight,d=Math.hypot(dx,dy);if(d<180){ctx.strokeStyle=`rgba(56,189,248,${(1-d/180)*.09})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x*innerWidth,a.y*innerHeight);ctx.lineTo(b.x*innerWidth,b.y*innerHeight);ctx.stroke()}}dots.forEach(p=>{ctx.fillStyle='rgba(56,189,248,.26)';ctx.beginPath();ctx.arc(p.x*innerWidth,p.y*innerHeight,1.35,0,Math.PI*2);ctx.fill()});requestAnimationFrame(frame)};
-      addEventListener('resize',resize);resize();frame();
-    }
-    if (!document.documentElement.dataset.interactionsReady) {
-      document.documentElement.dataset.interactionsReady='true';
-      const dialog=document.querySelector('#command-palette');
-      const trigger=document.querySelector('#command-trigger');
-      const menu=document.querySelector('#menu-trigger');
-      const nav=document.querySelector('.nav');
-      const input=document.querySelector('#command-input');
-      const items=[...document.querySelectorAll('.command-item')];
-      const openPalette=()=>{if(dialog instanceof HTMLDialogElement){dialog.showModal();input?.focus()}};
-      trigger?.addEventListener('click',openPalette);
-      addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPalette()}});
-      input?.addEventListener('input',()=>{const q=input.value.trim().toLowerCase();items.forEach(item=>{if(item instanceof HTMLElement)item.hidden=!item.dataset.label?.includes(q)})});
-      dialog?.addEventListener('click',e=>{if(e.target===dialog&&dialog instanceof HTMLDialogElement)dialog.close()});
-      menu?.addEventListener('click',()=>{const open=nav?.classList.toggle('open') ?? false;menu.setAttribute('aria-expanded',String(open))});
-      document.addEventListener('click',e=>{if(!(e.target instanceof Element))return;if(!e.target.closest('.site-header')&&nav?.classList.contains('open')){nav.classList.remove('open');menu?.setAttribute('aria-expanded','false')}});
+      const resize = () => { const dpr = Math.min(devicePixelRatio || 1, 1.5); canvas.width = innerWidth * dpr; canvas.height = innerHeight * dpr; ctx?.setTransform(dpr, 0, 0, dpr, 0, 0); };
+      const start = performance.now();
+      const frame = (now) => { if (!ctx) return; const t = (now - start) / 1000; ctx.clearRect(0, 0, innerWidth, innerHeight); const g = ctx.createRadialGradient(innerWidth * .72, innerHeight * .16, 0, innerWidth * .72, innerHeight * .16, innerWidth * .7); g.addColorStop(0, 'rgba(76,201,240,.08)'); g.addColorStop(1, 'rgba(7,8,12,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, innerWidth, innerHeight); const y = innerHeight * (.28 + Math.sin(t * .18) * .025); ctx.strokeStyle = 'rgba(76,201,240,.07)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(innerWidth * .08, y); ctx.bezierCurveTo(innerWidth * .3, y - 35, innerWidth * .62, y + 35, innerWidth * .92, y - 5); ctx.stroke(); requestAnimationFrame(frame); };
+      addEventListener('resize', resize, { passive: true }); resize(); requestAnimationFrame(frame);
     }
   </script>
 </body>
 </html>
-
 <style is:global>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-:root{--bg:#07090e;--panel:rgba(13,18,29,.72);--panel-strong:#0b1019;--line:rgba(255,255,255,.09);--line-strong:rgba(255,255,255,.15);--cyan:#7cecff;--blue:#58b6ff;--mint:#5ee6b2;--text:#f6f8fb;--muted:#96a2b3;--soft:#687487}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}body,button,input{font-synthesis:none}a{color:inherit;text-decoration:none}.skip-link{position:fixed;top:-50px;left:18px;z-index:100;padding:10px 13px;border-radius:10px;background:#f8fafc;color:#07090e;font:600 12px 'JetBrains Mono'}.skip-link:focus{top:18px}.ambient{position:fixed;inset:0;background:radial-gradient(circle at 75% 12%,rgba(124,236,255,.065),transparent 27%),radial-gradient(circle at 18% 80%,rgba(94,230,178,.035),transparent 25%);pointer-events:none;z-index:-3}.noise{position:fixed;inset:0;opacity:.02;pointer-events:none;z-index:-1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E")}#global-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:-2}.site-header{position:sticky;top:14px;z-index:30;margin:14px auto 0;width:min(1240px,calc(100% - 32px));display:flex;align-items:center;gap:18px;padding:9px 10px;border:1px solid var(--line);background:rgba(7,9,14,.76);backdrop-filter:blur(20px);border-radius:16px;box-shadow:0 18px 55px rgba(0,0,0,.24)}.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.035em}.brand-mark{display:grid;place-items:center;width:31px;height:31px;border:1px solid rgba(124,236,255,.3);border-radius:9px;background:linear-gradient(180deg,rgba(124,236,255,.11),rgba(124,236,255,.03));font:600 12px 'JetBrains Mono'}.brand-word{font-size:14px}.accent{color:var(--cyan)}.nav{display:flex;gap:3px;margin-left:auto}.nav a{padding:8px 10px;border-radius:9px;color:#8895a8;font-size:12px;font-weight:500}.nav a:hover,.nav a.active{color:var(--text);background:rgba(255,255,255,.055)}.header-actions{display:flex;align-items:center;gap:7px}.availability{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;color:#a9b5c6;font:10px 'JetBrains Mono';border:1px solid rgba(94,230,178,.14);background:rgba(94,230,178,.035);border-radius:9px}.availability span{width:6px;height:6px;border-radius:50%;background:var(--mint);box-shadow:0 0 14px rgba(94,230,178,.75)}.command-trigger,.menu-trigger,.palette-top kbd{font:500 11px 'JetBrains Mono';color:#8d9aab;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:9px;padding:8px 10px}.command-trigger,.menu-trigger{cursor:pointer}.menu-trigger{display:none}.page-shell{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:72px 0 96px}.site-footer{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:22px 0 34px;color:var(--soft);font:10px 'JetBrains Mono';display:flex;justify-content:space-between;gap:18px;border-top:1px solid var(--line)}.site-footer>div{display:flex;align-items:center;gap:12px}.footer-sep{color:#384353}.footer-links{gap:15px!important}.footer-links a:hover{color:var(--text)}.command-palette{width:min(640px,calc(100% - 30px));padding:0;border:0;background:transparent}.command-palette::backdrop{background:rgba(0,0,0,.66);backdrop-filter:blur(7px)}.palette-card{padding:13px;border:1px solid var(--line-strong);border-radius:18px;background:rgba(10,14,22,.96);box-shadow:0 34px 110px rgba(0,0,0,.55)}.palette-top{display:flex;justify-content:space-between;align-items:center;padding:3px 4px 11px;color:var(--soft);font:10px 'JetBrains Mono'}.command-palette input{width:100%;padding:14px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.04);color:var(--text);font:13px 'DM Sans';outline:none}.command-palette input:focus{border-color:rgba(124,236,255,.4);box-shadow:0 0 0 3px rgba(124,236,255,.06)}.command-results{display:grid;gap:4px;margin-top:9px;max-height:370px;overflow:auto}.command-item{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:12px 11px;border-radius:9px;color:#a8b3c3;font-size:13px}.command-item span{font:10px 'JetBrains Mono';color:var(--blue)}.command-item b{font-weight:500;color:#556174}.command-item:hover{color:var(--text);background:rgba(255,255,255,.055)}.command-item[hidden]{display:none}:focus-visible{outline:2px solid rgba(124,236,255,.8);outline-offset:3px}@media(max-width:900px){.nav{position:absolute;top:calc(100% + 8px);left:0;right:0;display:none;flex-direction:column;padding:8px;border:1px solid var(--line);background:rgba(9,13,20,.96);backdrop-filter:blur(20px);border-radius:14px}.nav.open{display:flex}.nav a{padding:11px 12px}.menu-trigger{display:inline-flex}.availability{display:none}}@media(max-width:600px){.site-header{top:8px;margin-top:8px;width:calc(100% - 20px)}.page-shell{padding-top:52px;width:calc(100% - 20px)}.site-footer{width:calc(100% - 20px);flex-direction:column;align-items:flex-start}.site-footer>div{flex-wrap:wrap}.command-trigger{display:none}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ambient{background:radial-gradient(circle at 75% 12%,rgba(124,236,255,.05),transparent 27%)}}
+:root{--bg:#07080c;--surface:#0e1218;--surface-2:#121720;--border:#202631;--border-strong:#2b3440;--text:#eef1f6;--text-dim:#a0a9b7;--text-soft:#6f7b8d;--accent:#4cc9f0;--accent-soft:rgba(76,201,240,.10);--signal:#ffb454;--success:#4ade80;--max:1240px;--r-sm:8px;--r-md:12px;--r-lg:18px;--dur:220ms;--ease:cubic-bezier(.22,1,.36,1);--shadow:0 20px 60px rgba(0,0,0,.24)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}body,button,input{font-synthesis:none}a{color:inherit;text-decoration:none}.skip-link{position:fixed;left:16px;top:-60px;z-index:100;padding:10px 13px;background:var(--text);color:var(--bg);border-radius:8px;font:600 11px 'JetBrains Mono'}.skip-link:focus{top:16px}.ambient{position:fixed;inset:0;z-index:-4;background:radial-gradient(circle at 74% 9%,rgba(76,201,240,.06),transparent 28%),radial-gradient(circle at 10% 88%,rgba(255,180,84,.025),transparent 24%)}.grid{position:fixed;inset:0;z-index:-3;opacity:.22;background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(to bottom,black,transparent 86%)}.ambient-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:-2}.site-header{position:sticky;top:14px;z-index:40;width:min(var(--max),calc(100% - 32px));margin:14px auto 0;display:flex;align-items:center;gap:24px;padding:9px 10px;border:1px solid var(--border);background:rgba(7,8,12,.82);backdrop-filter:blur(18px);border-radius:14px}.brand{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;letter-spacing:-.02em;white-space:nowrap}.brand-mark{display:grid;place-items:center;width:30px;height:30px;border:1px solid rgba(76,201,240,.4);border-radius:9px;color:var(--accent);font:600 12px 'JetBrains Mono';background:linear-gradient(145deg,rgba(76,201,240,.13),rgba(76,201,240,.025))}.accent{color:var(--accent)}.nav{display:flex;gap:2px;margin-left:auto}.nav a{padding:8px 10px;border-radius:8px;color:#8792a3;font-size:12px;transition:color var(--dur) var(--ease),background var(--dur) var(--ease)}.nav a:hover,.nav a.active{color:var(--text);background:rgba(255,255,255,.055)}.header-actions{display:flex;align-items:center;gap:7px}.availability{display:inline-flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid rgba(74,222,128,.16);border-radius:8px;color:#b7d9c2;background:rgba(74,222,128,.025);font:9px 'JetBrains Mono';white-space:nowrap}.availability span{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 12px rgba(74,222,128,.7)}.command-trigger,.menu-trigger,.palette-top kbd{padding:8px 9px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.03);color:#909aaa;font:500 10px 'JetBrains Mono';cursor:pointer}.menu-trigger{display:none}.page-shell{width:min(var(--max),calc(100% - 32px));margin:0 auto;padding:76px 0 96px}.site-footer{width:min(var(--max),calc(100% - 32px));margin:0 auto;padding:22px 0 32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:18px;color:var(--text-soft);font:9px 'JetBrains Mono'}.footer-links{display:flex;gap:16px}.footer-links a:hover{color:var(--text)}:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.command-palette{width:min(620px,calc(100% - 24px));padding:0;border:0;background:transparent}.command-palette::backdrop{background:rgba(3,5,8,.68);backdrop-filter:blur(8px)}.palette-card{padding:13px;border:1px solid var(--border-strong);background:rgba(10,13,18,.97);border-radius:16px;box-shadow:var(--shadow)}.palette-top{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 10px;color:var(--text-soft);font:9px 'JetBrains Mono'}.command-palette input{width:100%;padding:13px;border:1px solid var(--border);border-radius:10px;outline:0;background:#0b0f15;color:var(--text);font:13px 'DM Sans'}.command-palette input:focus{border-color:rgba(76,201,240,.45);box-shadow:0 0 0 3px rgba(76,201,240,.08)}.command-results{display:grid;gap:3px;margin-top:8px}.command-item{display:grid;grid-template-columns:32px 1fr auto;gap:10px;padding:11px;border-radius:8px;color:#acb5c2}.command-item span{color:var(--accent);font:10px 'JetBrains Mono'}.command-item b{font-size:12px;font-weight:500}.command-item small{color:#5d6878}.command-item:hover{background:rgba(255,255,255,.045);color:var(--text)}.command-item[hidden]{display:none}@media(max-width:920px){.nav{position:absolute;left:0;right:0;top:calc(100% + 8px);display:none;flex-direction:column;padding:7px;border:1px solid var(--border);background:rgba(9,12,17,.97);backdrop-filter:blur(18px);border-radius:12px}.nav.open{display:flex}.nav a{padding:11px}.menu-trigger{display:inline-flex}.availability{display:none}}@media(max-width:620px){.site-header{top:8px;margin-top:8px;width:calc(100% - 20px);gap:10px}.brand{font-size:12px}.page-shell{width:calc(100% - 20px);padding-top:48px}.site-footer{width:calc(100% - 20px);flex-direction:column;align-items:flex-start}.command-trigger{display:none}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ambient-canvas{display:none}.ambient{background:radial-gradient(circle at 74% 9%,rgba(76,201,240,.045),transparent 28%)}}
+::selection{background:rgba(76,201,240,.22);color:var(--text)}
 </style>
