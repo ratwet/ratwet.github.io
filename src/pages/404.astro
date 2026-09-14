@@ -1,14 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="404 | Kaushal Kumar" description="The requested page could not be found.">
+<Layout title="Not found | Kaushal Kumar" description="The requested page could not be found on Kaushal Kumar's portfolio.">
   <section class="not-found">
-    <span class="code">404 / NOT FOUND</span>
-    <h1>That page is not in the system.</h1>
-    <p>The route may have moved, or the link may be outdated. The main sections are one click away.</p>
-    <a class="button" href="/">Return home <span>↗</span></a>
+    <div class="reticle" aria-hidden="true"><span></span></div>
+    <p class="eyebrow">404 · calibration lost</p>
+    <h1>This page is outside the current frame.</h1>
+    <p>The address does not map to a published page. Return to the portfolio or open the command palette to navigate somewhere else.</p>
+    <div class="actions"><a class="primary" href="/">Return home</a><a class="secondary" href="/projects/">View work</a></div>
   </section>
 </Layout>
 <style>
-.not-found{min-height:58vh;display:grid;align-content:center;max-width:720px}.code{font:10px 'JetBrains Mono';color:var(--accent);letter-spacing:.1em}.not-found h1{margin:15px 0 12px;font-size:clamp(42px,6vw,76px);line-height:.98;letter-spacing:-.06em}.not-found p{max-width:580px;color:var(--text-dim);font-size:15px;line-height:1.75}.button{display:inline-flex;justify-self:start;margin-top:18px;padding:11px 14px;border-radius:9px;background:var(--text);color:var(--bg);font-size:12px;font-weight:600}
+.not-found{min-height:62vh;display:grid;align-content:center;max-width:700px;padding:50px 0}.reticle{width:74px;height:74px;position:relative;margin-bottom:34px;border:1px solid var(--color-border);border-radius:50%;color:var(--color-signal)}.reticle::before,.reticle::after{content:'';position:absolute;background:currentColor}.reticle::before{width:1px;height:100%;left:50%;top:0}.reticle::after{height:1px;width:100%;left:0;top:50%}.reticle span{position:absolute;left:50%;top:50%;width:7px;height:7px;transform:translate(-50%,-50%);border:1px solid currentColor;border-radius:50%;background:var(--color-bg)}.eyebrow{margin:0 0 12px;color:var(--color-signal);font:10px var(--font-mono)}h1{max-width:620px;margin:0;font-size:clamp(42px,6vw,70px);line-height:1;letter-spacing:-.055em}.not-found>p:not(.eyebrow){max-width:620px;margin:21px 0 26px;color:var(--color-ink-dim);font-size:16px;line-height:1.75}.actions{display:flex;gap:8px;flex-wrap:wrap}.primary,.secondary{display:inline-flex;align-items:center;min-height:43px;padding:0 14px;border-radius:var(--radius-md);font-size:12px;font-weight:600}.primary{background:var(--color-ink);color:var(--color-bg)}.secondary{background:var(--color-surface);border:1px solid var(--color-border-strong)}
 </style>
