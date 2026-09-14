@@ -5,11 +5,6 @@ summary: 'Real-time hand tracking mapped to cursor control, designed to run loca
 year: 2026
 status: 'shipped'
 repoUrl: 'https://github.com/ratwet/finger-gesture-cursor'
-metrics:
-  - label: 'Throughput'
-    value: '~40 FPS'
-  - label: 'Control latency'
-    value: '<25ms'
 featured: true
 ---
 
